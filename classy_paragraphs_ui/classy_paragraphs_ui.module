@@ -695,6 +695,10 @@ function classy_paragraphs_ui_edit_class_instance_submit($form, &$form_state) {
   $config = config('classy_paragraphs_ui.class_instances');
   $config->set($set . '.' . $class, array('weight' => $form_state['values']['weight']));
   $config->save();
+
+  backdrop_set_message(t('The @class class has been updated for @set.', array('@class' => $class, '@set' => $set)));
+
+  $form_state['redirect'] = 'admin/config/content/classy-paragraphs-ui/set/' . $set . '/classes';
 }
 
 /**
@@ -725,9 +729,19 @@ function classy_paragraphs_ui_classy_paragraphs_list_options_alter(&$options, $f
     $set = NULL;
   }
 
-  $classes_array = config_get('classy_paragraphs_ui.classes');
+  $classes = config_get('classy_paragraphs_ui.classes');
+  $config_instances = config('classy_paragraphs_ui.class_instances');
 
-  foreach ($classes_array as $key => $value) {
+  if ($set) {
+    $class_instances = $config_instances->get($set);
+    foreach ($class_instances as $key => $class) {
+      $class_instances[$key] = $class + $classes[$key];
+    }
+    backdrop_sort($class_instances);
+    $classes = $class_instances;
+  }
+
+  foreach ($classes as $key => $value) {
     if (!$set || (is_array($value['sets']) && !empty($value['sets'][$set]))) {
       // Include the set name if setting enabled.
       if (!empty($value['sets'][$set]) && $set_include) {
