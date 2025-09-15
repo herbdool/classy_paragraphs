@@ -467,6 +467,7 @@ function classy_paragraphs_ui_add_edit_form($form, &$form_state, $the_id, $op) {
       '#title' => t('Weight'),
       '#default_value' => $default_value['weight'] ?? 0,
       '#description' => t('The weight will sort the display of classes in a set that are displayed in a select field. A larger number is heavier than a smaller number.'),
+      '#delta' => 100,
     );
     if (!empty($sets_array)) {
       $set_options = array();
