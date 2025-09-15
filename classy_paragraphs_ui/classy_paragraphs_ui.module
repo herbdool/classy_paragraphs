@@ -201,6 +201,7 @@ function classy_paragraphs_ui_edit_class_submit($form, &$form_state) {
     'name' => $form_state['values']['name'],
     'label' => $form_state['values']['label'],
     'sets' => $sets,
+    'weight' => $form_state['values']['weight'],
   );
   $config->set($form_state['values']['name'], $class);
   $config->save();
@@ -223,6 +224,7 @@ function classy_paragraphs_ui_add_class_submit($form, &$form_state) {
     'name' => $form_state['values']['name'],
     'label' => $form_state['values']['label'],
     'sets' => $sets,
+    'weight' => $form_state['values']['weight'],
   );
   $config->set($form_state['values']['name'], $new_class);
   $config->save();
@@ -460,6 +462,12 @@ function classy_paragraphs_ui_add_edit_form($form, &$form_state, $the_id, $op) {
       '#description' => t("The label, used for administrative screens only."),
       '#required' => TRUE,
     );
+    $form['weight'] = array(
+      '#type' => 'weight',
+      '#title' => t('Weight'),
+      '#default_value' => $default_value['weight'] ?? 0,
+      '#description' => t('The weight will sort the display of classes in a set that are displayed in a select field. A larger number is heavier than a smaller number.'),
+    );
     if (!empty($sets_array)) {
       $set_options = array();
       foreach ($sets_array as $set) {
@@ -540,8 +548,7 @@ function classy_paragraphs_ui_set_exists($element, &$form_state) {
 }
 
 /**
- * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * Implements hook_classy_paragraphs_list_options_alter().
  */
 function classy_paragraphs_ui_classy_paragraphs_list_options_alter(&$options, $field = NULL, $instance = array()) {
   if (!empty($instance['settings']['classy_paragraphs_set'])) {
@@ -568,6 +575,9 @@ function classy_paragraphs_ui_classy_paragraphs_list_options_alter(&$options, $f
   }
 }
 
+/**
+ * Implements hook_field_widget_info_alter().
+ */
 function classy_paragraphs_ui_field_widget_info_alter(&$info) {
   // Add a setting to a widget type.
   foreach ($info as $key => $widget) {
