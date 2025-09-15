@@ -732,7 +732,7 @@ function classy_paragraphs_ui_classy_paragraphs_list_options_alter(&$options, $f
   $classes = config_get('classy_paragraphs_ui.classes');
   $config_instances = config('classy_paragraphs_ui.class_instances');
 
-  if ($set) {
+  if ($set && !$config_instances->isNew()) {
     $class_instances = $config_instances->get($set);
     foreach ($class_instances as $key => $class) {
       $class_instances[$key] = $class + $classes[$key];
