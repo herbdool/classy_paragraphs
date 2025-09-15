@@ -36,3 +36,20 @@ function classy_paragraphs_ui_update_1100() {
   $old_config->clear('classy_paragraphs_settings');
   $old_config->save();
 }
+
+/**
+ * Add a weight column to each class.
+ */
+function classy_paragraphs_ui_update_1101() {
+  $config = config('classy_paragraphs_ui.classes');
+  $classes = $config->getData();
+  $classes_new = array();
+  foreach ($classes as $class_name => $class) {
+    $classes_new[$class_name] = $class;
+    if (!isset($classes_new[$class_name]['weight'])) {
+      $classes_new[$class_name]['weight'] = 0;
+    }
+  }
+  $config->setData($classes_new);
+  $config->save();
+}
